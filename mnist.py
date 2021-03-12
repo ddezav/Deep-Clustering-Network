@@ -5,7 +5,8 @@ from DCN import DCN
 from torchvision import datasets, transforms
 from sklearn.metrics import adjusted_rand_score
 from sklearn.metrics import normalized_mutual_info_score
-
+from elorsdataset import ElorsDataSet
+from torch import utils
 
 def evaluate(model, test_loader):
     y_test = []
@@ -97,16 +98,19 @@ if __name__ == '__main__':
     args = parser.parse_args()
 
     # Load data
-    transformer = transforms.Compose([transforms.ToTensor(),
-                                      transforms.Normalize((0.1307,),
-                                                           (0.3081,))])
-    train_loader = torch.utils.data.DataLoader(
-        datasets.MNIST(args.dir, train=True, download=True,
-                       transform=transformer),
+    #transformer = transforms.Compose([transforms.ToTensor(),
+    #                                  transforms.Normalize((0.1307,),
+    #                                                       (0.3081,))])
+
+    dataset = ElorsDataSet(args.dir)
+
+    lengths = [int(len(dataset)*0.8), int(len(dataset)*0.2)]
+    train_set, test_set = random_split(dataset,lengths)
+
+    train_loader = torch.utils.data.DataLoader(train_set,
         batch_size=args.batch_size, shuffle=False)
 
-    test_loader = torch.utils.data.DataLoader(
-        datasets.MNIST(args.dir, train=False, transform=transformer),
+    test_loader = torch.utils.data.DataLoader(test_set,
         batch_size=args.batch_size, shuffle=True)
 
     # Main body
