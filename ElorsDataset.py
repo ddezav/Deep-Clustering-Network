@@ -5,8 +5,8 @@ import numpy as np
 import math
 
 class ElorsDataSet(Dataset):
-    def __init__(dir):
-        xy = np.loadtxt(dir,delimiter=",",dtype=np.float32)
+    def __init__(self,dir):
+        xy = np.loadtxt(dir,delimiter=",",dtype=np.float32,skiprows=1)
         self.x = torch.from_numpy(xy[:,1:])
         self.y = torch.from_numpy(xy[:,[0]])
         self.n_samples = xy.shape[0]

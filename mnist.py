@@ -5,7 +5,7 @@ from DCN import DCN
 from torchvision import datasets, transforms
 from sklearn.metrics import adjusted_rand_score
 from sklearn.metrics import normalized_mutual_info_score
-from elorsdataset import ElorsDataSet
+from ElorsDataset import ElorsDataSet
 from torch import utils
 
 def evaluate(model, test_loader):
@@ -28,7 +28,7 @@ def evaluate(model, test_loader):
 
 def solver(args, model, train_loader, test_loader):
 
-    rec_loss_list = model.pretrain(train_loader, args.pre_epoch)
+    #rec_loss_list = model.pretrain(train_loader, args.pre_epoch)
     nmi_list = []
     ari_list = []
 
@@ -54,7 +54,7 @@ if __name__ == '__main__':
     # Dataset parameters
     parser.add_argument('--dir', default='../Dataset/mnist',
                         help='dataset directory')
-    parser.add_argument('--input-dim', type=int, default=28*28,
+    parser.add_argument('--input-dim', type=int, default=1*10,
                         help='input dimension')
     parser.add_argument('--n-classes', type=int, default=10,
                         help='output dimension')
@@ -81,13 +81,13 @@ if __name__ == '__main__':
                               'clustering'))
     parser.add_argument('--hidden-dims', default=[500, 500, 2000],
                         help='learning rate (default: 1e-4)')
-    parser.add_argument('--latent_dim', type=int, default=10,
+    parser.add_argument('--latent_dim', type=int, default=4,
                         help='latent space dimension')
     parser.add_argument('--n-clusters', type=int, default=10,
                         help='number of clusters in the latent space')
 
     # Utility parameters
-    parser.add_argument('--n-jobs', type=int, default=1,
+    parser.add_argument('--n-jobs', type=int, default=2,
                         help='number of jobs to run in parallel')
     parser.add_argument('--cuda', type=bool, default=True,
                         help='whether to use GPU')
@@ -103,9 +103,10 @@ if __name__ == '__main__':
     #                                                       (0.3081,))])
 
     dataset = ElorsDataSet(args.dir)
-
-    lengths = [int(len(dataset)*0.8), int(len(dataset)*0.2)]
-    train_set, test_set = random_split(dataset,lengths)
+    len_train = (int(len(dataset)*0.8))
+    len_test = len(dataset)-len_train
+    lengths = [len_train, len_test]
+    train_set, test_set = torch.utils.data.random_split(dataset,lengths)
 
     train_loader = torch.utils.data.DataLoader(train_set,
         batch_size=args.batch_size, shuffle=False)
