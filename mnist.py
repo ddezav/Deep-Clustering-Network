@@ -118,3 +118,5 @@ if __name__ == '__main__':
     model = DCN(args)
     rec_loss_list, nmi_list, ari_list = solver(
         args, model, train_loader, test_loader)
+
+    print(model.kmeans.inertia)

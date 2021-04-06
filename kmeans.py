@@ -35,6 +35,7 @@ class batch_KMeans(object):
                        n_init=20)
         model.fit(X)
         self.clusters = model.cluster_centers_  # copy clusters
+        self.inertia = model.inertia_
 
     def update_cluster(self, X, cluster_idx):
         """ Update clusters in Kmeans on a batch of data """
