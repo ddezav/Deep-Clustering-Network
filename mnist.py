@@ -28,7 +28,7 @@ def evaluate(model, test_loader):
 
 def solver(args, model, train_loader, test_loader):
 
-    #rec_loss_list = model.pretrain(train_loader, args.pre_epoch)
+    rec_loss_list = model.pretrain(train_loader, args.pre_epoch)
     nmi_list = []
     ari_list = []
 
